@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package com.pemdos.proto;
+
+option java_multiple_files = true;
+option java_package = "com.pemdos.common.proto";
+option java_outer_classname = "StorageProto";
+
+service StorageNodeService {
+    rpc StoreShard(StoreShardRequest) returns (StoreShardResponse);
+    rpc GetShard(GetShardRequest) returns (GetShardResponse);
+    rpc DeleteShard(DeleteShardRequest) returns (DeleteShardResponse);
+    rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+    rpc GetNodeStatus(NodeStatusRequest) returns (NodeStatusResponse);
+}
+
+message StoreShardRequest {
+    string object_id = 1;
+    int32 shard_index = 2;
+    bytes data = 3;
+    string sha256_hash = 4;
+    bool is_parity = 5;
+}
+
+message StoreShardResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message GetShardRequest {
+    string object_id = 1;
+    int32 shard_index = 2;
+}
+
+message GetShardResponse {
+    bool found = 1;
+    bytes data = 2;
+    string sha256_hash = 3;
+    string message = 4;
+}
+
+message DeleteShardRequest {
+    string object_id = 1;
+    int32 shard_index = 2;
+}
+
+message DeleteShardResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+    bool healthy = 1;
+    string node_id = 2;
+    int64 uptime_seconds = 3;
+}
+
+message NodeStatusRequest {}
+
+message NodeStatusResponse {
+    string node_id = 1;
+    int64 total_shards = 2;
+    int64 total_bytes = 3;
+    int64 available_bytes = 4;
+    bool healthy = 5;
+}
