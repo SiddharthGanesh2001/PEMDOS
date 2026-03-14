@@ -1,0 +1,41 @@
+plugins {
+    id 'java-library'
+    id 'com.google.protobuf' version '0.9.4'
+}
+
+dependencies {
+    api 'com.backblaze.b2:b2-sdk-core:6.1.1'
+
+    api 'io.grpc:grpc-netty-shaded:1.61.0'
+    api 'io.grpc:grpc-protobuf:1.61.0'
+    api 'io.grpc:grpc-stub:1.61.0'
+
+    api 'com.google.protobuf:protobuf-java:3.25.2'
+
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.25.2'
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.61.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}

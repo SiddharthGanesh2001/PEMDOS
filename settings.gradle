@@ -1,0 +1,5 @@
+rootProject.name = 'pemdos'
+
+include 'common'
+include 'storage-node'
+include 'coordinator'
