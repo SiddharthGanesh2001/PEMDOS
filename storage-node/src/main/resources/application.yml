@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: pemdos-storage-node
+
+pemdos:
+  node:
+    id: ${NODE_ID:node-1}
+    storage-path: ${STORAGE_PATH:/data/shards}
+
+grpc:
+  server:
+    port: ${GRPC_PORT:5001}
+
+logging:
+  level:
+    com.pemdos: DEBUG
