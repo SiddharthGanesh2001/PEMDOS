@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api 'com.backblaze.b2:b2-sdk-core:6.1.1'
+    api 'com.github.Backblaze:JavaReedSolomon:master-SNAPSHOT'
 
     api 'io.grpc:grpc-netty-shaded:1.61.0'
     api 'io.grpc:grpc-protobuf:1.61.0'
