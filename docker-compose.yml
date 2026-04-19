@@ -1,0 +1,95 @@
+services:
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: pemdos
+      POSTGRES_USER: pemdos
+      POSTGRES_PASSWORD: pemdos
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  node-1:
+    build: ./storage-node
+    environment:
+      NODE_ID: node-1
+      GRPC_PORT: 5001
+      STORAGE_PATH: /data/shards
+    ports:
+      - "5001:5001"
+    volumes:
+      - node1-data:/data/shards
+
+  node-2:
+    build: ./storage-node
+    environment:
+      NODE_ID: node-2
+      GRPC_PORT: 5002
+      STORAGE_PATH: /data/shards
+    ports:
+      - "5002:5002"
+    volumes:
+      - node2-data:/data/shards
+
+  node-3:
+    build: ./storage-node
+    environment:
+      NODE_ID: node-3
+      GRPC_PORT: 5003
+      STORAGE_PATH: /data/shards
+    ports:
+      - "5003:5003"
+    volumes:
+      - node3-data:/data/shards
+
+  node-4:
+    build: ./storage-node
+    environment:
+      NODE_ID: node-4
+      GRPC_PORT: 5004
+      STORAGE_PATH: /data/shards
+    ports:
+      - "5004:5004"
+    volumes:
+      - node4-data:/data/shards
+
+  node-5:
+    build: ./storage-node
+    environment:
+      NODE_ID: node-5
+      GRPC_PORT: 5005
+      STORAGE_PATH: /data/shards
+    ports:
+      - "5005:5005"
+    volumes:
+      - node5-data:/data/shards
+
+  coordinator:
+    build: ./coordinator
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: pemdos
+      DB_USER: pemdos
+      DB_PASSWORD: pemdos
+      DATA_SHARDS: 3
+      PARITY_SHARDS: 2
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - node-1
+      - node-2
+      - node-3
+      - node-4
+      - node-5
+
+volumes:
+  postgres-data:
+  node1-data:
+  node2-data:
+  node3-data:
+  node4-data:
+  node5-data:
