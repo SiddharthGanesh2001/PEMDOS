@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: pemdos-coordinator
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:pemdos}
+    username: ${DB_USER:pemdos}
+    password: ${DB_PASSWORD:pemdos}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+server:
+  port: ${SERVER_PORT:8080}
+
+pemdos:
+  codec:
+    data-shards: ${DATA_SHARDS:3}
+    parity-shards: ${PARITY_SHARDS:2}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
