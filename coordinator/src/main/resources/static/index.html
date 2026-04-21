@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PEMDOS Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #111111;
+      color: #f0f0f0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    header h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+    }
+
+    header h1 span { color: #fb923c; }
+
+    header p {
+      font-size: 0.82rem;
+      color: #555555;
+      margin-top: 0.3rem;
+    }
+
+    .refresh-info {
+      font-size: 0.75rem;
+      color: #555555;
+      text-align: right;
+      margin-top: 0.25rem;
+    }
+
+    /* ── Section title ── */
+    .section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #444444;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── Node grid ── */
+    .nodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .node-card {
+      background: #1c1c1c;
+      border: 1px solid #2e2e2e;
+      border-radius: 8px;
+      padding: 1.2rem;
+    }
+
+    .node-card.healthy   { border-left: 3px solid #4ade80; }
+    .node-card.unhealthy { border-left: 3px solid #f87171; }
+
+    .node-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot.healthy   { background: #4ade80; box-shadow: 0 0 7px #4ade8088; }
+    .dot.unhealthy { background: #f87171; box-shadow: 0 0 7px #f8717188; }
+
+    .node-id   { font-size: 0.9rem; font-weight: 700; color: #ffffff; }
+    .node-stat { font-size: 0.76rem; color: #666666; margin-bottom: 0.3rem; }
+    .node-stat span { color: #cccccc; font-weight: 500; }
+
+    /* ── Objects table ── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 8px;
+      border: 1px solid #2e2e2e;
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.81rem; }
+
+    thead th {
+      background: #161616;
+      color: #555555;
+      font-weight: 700;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      white-space: nowrap;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    tbody tr.obj-row { border-top: 1px solid #1c1c1c; }
+    tbody tr.obj-row:hover { background: #181818; }
+    tbody td { padding: 0.7rem 1rem; color: #999999; white-space: nowrap; }
+
+    .key-cell  { color: #fb923c; font-weight: 600; }
+    .mono      { font-family: "SF Mono", "Fira Code", monospace; font-size: 0.73rem; color: #555555; }
+    .size-cell { color: #e879f9; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.12rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+    .badge-data   { background: #3a1a06; color: #fb923c; }
+    .badge-parity { background: #2d0a3a; color: #e879f9; }
+
+    /* ── Verify button ── */
+    .btn-verify {
+      background: none;
+      border: 1px solid #2e2e2e;
+      color: #666666;
+      border-radius: 5px;
+      padding: 0.22rem 0.65rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-verify:hover { border-color: #fb923c; color: #fb923c; }
+    .btn-verify.loading { opacity: 0.4; cursor: default; }
+
+    /* ── Verify panel ── */
+    tr.verify-row td { padding: 0; border-top: none; }
+
+    .verify-panel {
+      background: #0e0e0e;
+      border-top: 1px solid #1c1c1c;
+      padding: 0.8rem 1rem;
+      display: none;
+    }
+    .verify-panel.open { display: block; }
+
+    .verify-subtitle {
+      font-size: 0.7rem;
+      color: #444444;
+      margin-bottom: 0.6rem;
+    }
+
+    .shard-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .shard-card {
+      border-radius: 7px;
+      padding: 0.55rem 0.8rem;
+      font-size: 0.73rem;
+      border: 1px solid;
+      min-width: 140px;
+    }
+    .shard-card.all-pass    { background: #052010; border-color: #166534; }
+    .shard-card.has-fail    { background: #2a0808; border-color: #991b1b; }
+    .shard-card.unreachable { background: #1c1c1c; border-color: #2e2e2e; }
+
+    .shard-name { font-weight: 700; color: #f0f0f0; margin-bottom: 0.35rem; }
+    .shard-type { color: #555555; font-weight: 400; margin-left: 4px; }
+
+    .check-row   { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.2rem; }
+    .check-label { color: #555555; width: 82px; font-size: 0.7rem; }
+
+    .pill {
+      padding: 0.08rem 0.45rem;
+      border-radius: 3px;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    .pill-pass        { background: #14532d; color: #4ade80; }
+    .pill-fail        { background: #7f1d1d; color: #fca5a5; }
+    .pill-unreachable { background: #1c1c1c; color: #555555; }
+
+    /* ── Table footer row ── */
+    .refresh-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .empty { text-align: center; color: #444444; padding: 2rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>PEM<span>DOS</span></h1>
+    <p>Persistent Erasure-coded Modular Distributed Object Store &nbsp;·&nbsp; Reed-Solomon 3+2 &nbsp;·&nbsp; Homomorphic Fingerprinting</p>
+  </div>
+  <div>
+    <div class="refresh-info">Auto-refresh every 4s</div>
+    <div class="refresh-info">Last updated: <span id="last-updated">—</span></div>
+  </div>
+</header>
+
+<div class="section-title">Storage Nodes</div>
+<div class="nodes-grid" id="nodes-grid">
+  <div class="node-card"><div class="empty">Loading…</div></div>
+</div>
+
+<div class="refresh-row">
+  <div class="section-title" style="margin:0">Stored Objects</div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Size</th>
+        <th>Shard size</th>
+        <th>Shards</th>
+        <th>Eval point (r)</th>
+        <th>Combined fingerprint</th>
+        <th>Created</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="objects-body">
+      <tr><td colspan="8" class="empty">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // Stores the last verify result for each object key so re-renders don't wipe it.
+  const verifyCache = new Map();
+
+  function fmt(bytes) {
+    if (bytes === 0) return "0 B";
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / 1048576).toFixed(1) + " MB";
+  }
+
+  function renderNodes(nodes) {
+    const grid = document.getElementById("nodes-grid");
+    if (!nodes.length) { grid.innerHTML = '<div class="empty">No nodes registered.</div>'; return; }
+    grid.innerHTML = nodes.map(n => {
+      const cls = n.status === "HEALTHY" ? "healthy" : "unhealthy";
+      return `
+        <div class="node-card ${cls}">
+          <div class="node-header">
+            <div class="dot ${cls}"></div>
+            <div class="node-id">${n.nodeId}</div>
+          </div>
+          <div class="node-stat">Status &nbsp;<span>${n.status}</span></div>
+          <div class="node-stat">Shards &nbsp;<span>${n.totalShards}</span></div>
+          <div class="node-stat">Stored &nbsp;<span>${fmt(n.totalBytes)}</span></div>
+          <div class="node-stat">Free &nbsp;<span>${fmt(n.availableBytes)}</span></div>
+        </div>`;
+    }).join("");
+  }
+
+  function renderObjects(objects) {
+    const tbody = document.getElementById("objects-body");
+    if (!objects.length) {
+      tbody.innerHTML = '<tr><td colspan="8" class="empty">No objects stored yet.</td></tr>';
+      return;
+    }
+
+    const openKeys = new Set(
+      [...document.querySelectorAll('.verify-panel.open')].map(el => el.dataset.key)
+    );
+
+    // Re-render after setting innerHTML to restore cached shard reports
+    const restoreVerify = () => {
+      openKeys.forEach(key => {
+        if (verifyCache.has(key)) renderShardReport(key, verifyCache.get(key));
+      });
+    };
+
+    tbody.innerHTML = objects.flatMap(o => {
+      const shardBadges = o.shards.map(s =>
+        `<span class="badge ${s.parity ? 'badge-parity' : 'badge-data'}">${s.nodeId}</span>`
+      ).join(" ");
+      const created = new Date(o.createdAt).toLocaleTimeString();
+      const fp = o.combinedFingerprint ? o.combinedFingerprint.slice(0, 16) + "…" : "—";
+      const panelOpen = openKeys.has(o.objectKey) ? "open" : "";
+
+      return [
+        `<tr class="obj-row">
+          <td class="key-cell">${o.objectKey}</td>
+          <td class="size-cell">${fmt(o.originalSize)}</td>
+          <td class="size-cell">${fmt(o.shardSize)}</td>
+          <td>${shardBadges}</td>
+          <td class="mono">${o.homomorphicEvalPoint}</td>
+          <td class="mono">${fp}</td>
+          <td>${created}</td>
+          <td><button class="btn-verify" onclick="toggleVerify(this, '${o.objectKey}')">Verify</button></td>
+        </tr>`,
+        `<tr class="verify-row">
+          <td colspan="8">
+            <div class="verify-panel ${panelOpen}" id="vp-${o.objectKey}" data-key="${o.objectKey}">
+              <div class="verify-subtitle">
+                SHA-256 checks internal integrity &nbsp;·&nbsp; Homomorphic checks encoding consistency across shards
+              </div>
+              <div class="shard-grid" id="sg-${o.objectKey}">
+                <span style="color:#444;font-size:0.8rem;">Click Verify to run checks…</span>
+              </div>
+            </div>
+          </td>
+        </tr>`
+      ];
+    }).join("");
+
+    restoreVerify();
+  }
+
+  async function toggleVerify(btn, key) {
+    const panel = document.getElementById(`vp-${key}`);
+    if (panel.classList.contains("open")) { panel.classList.remove("open"); return; }
+
+    panel.classList.add("open");
+    btn.classList.add("loading");
+    btn.textContent = "Checking…";
+
+    try {
+      const results = await fetch(`/api/objects/${encodeURIComponent(key)}/verify`).then(r => r.json());
+      verifyCache.set(key, results);
+      renderShardReport(key, results);
+    } catch {
+      document.getElementById(`sg-${key}`).innerHTML =
+        '<span style="color:#f87171">Failed to fetch verification results.</span>';
+    }
+
+    btn.classList.remove("loading");
+    btn.textContent = "Verify";
+  }
+
+  function renderShardReport(key, shards) {
+    document.getElementById(`sg-${key}`).innerHTML = shards.map(s => {
+      const unreachable = s.nodeStatus === "UNREACHABLE";
+      const allPass = !unreachable && s.sha256 === "PASS" && s.homomorphic === "PASS";
+      const cardCls = unreachable ? "unreachable" : allPass ? "all-pass" : "has-fail";
+      const pill = v => {
+        if (v === "PASS") return `<span class="pill pill-pass">PASS</span>`;
+        if (v === "FAIL") return `<span class="pill pill-fail">FAIL</span>`;
+        return `<span class="pill pill-unreachable">—</span>`;
+      };
+      return `
+        <div class="shard-card ${cardCls}">
+          <div class="shard-name">${s.nodeId}<span class="shard-type">${s.shardIndex >= 3 ? 'parity' : 'data'}</span></div>
+          <div class="check-row"><span class="check-label">SHA-256</span>${pill(s.sha256)}</div>
+          <div class="check-row"><span class="check-label">Homomorphic</span>${pill(s.homomorphic)}</div>
+        </div>`;
+    }).join("");
+  }
+
+  async function refresh() {
+    try {
+      const [nodes, objects] = await Promise.all([
+        fetch("/api/nodes").then(r => r.json()),
+        fetch("/api/objects").then(r => r.json())
+      ]);
+      renderNodes(nodes);
+      renderObjects(objects);
+      document.getElementById("last-updated").textContent = new Date().toLocaleTimeString();
+    } catch (e) { console.error("Refresh failed:", e); }
+  }
+
+  refresh();
+  setInterval(refresh, 4000);
+</script>
+
+</body>
+</html>
