@@ -22,6 +22,10 @@ public class StoredObject {
     private String contentType;
     private String combinedFingerprint;
 
+    // Random GF(2^8) point at which all shard polynomials are evaluated.
+    // Stored per object so the coordinator can re-verify any shard later.
+    private int homomorphicEvalPoint;
+
     private Instant createdAt = Instant.now();
 
     @OneToMany(mappedBy = "objectId", cascade = CascadeType.ALL, orphanRemoval = true)

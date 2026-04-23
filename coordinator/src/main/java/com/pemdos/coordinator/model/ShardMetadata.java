@@ -18,4 +18,9 @@ public class ShardMetadata {
     private String sha256Hash;
     private boolean isParity;
     private long sizeBytes;
+
+    // Expected polynomial fingerprint for this shard, computed at upload time.
+    // During retrieval, the coordinator re-evaluates the shard bytes at the
+    // stored eval point and checks this matches.
+    private int homomorphicFingerprint;
 }

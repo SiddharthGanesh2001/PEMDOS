@@ -68,4 +68,11 @@ public class ObjectStoreController {
     public ResponseEntity<List<StoredObject>> list() {
         return ResponseEntity.ok(objectStoreService.listObjects());
     }
+
+    @GetMapping("/{objectKey}/verify")
+    @Operation(summary = "Verify integrity of all shards for an object")
+    public ResponseEntity<List<ObjectStoreService.ShardVerificationResult>> verify(
+            @PathVariable String objectKey) {
+        return ResponseEntity.ok(objectStoreService.verifyObject(objectKey));
+    }
 }

@@ -93,6 +93,18 @@ public class NodeClientService {
         }
     }
 
+    public Optional<NodeStatusResponse> getNodeStatus(StorageNode node) {
+        try {
+            NodeStatusResponse response = stubFor(node)
+                    .withDeadlineAfter(3, TimeUnit.SECONDS)
+                    .getNodeStatus(NodeStatusRequest.newBuilder().build());
+            return Optional.of(response);
+        } catch (Exception e) {
+            log.warn("Failed to get status from node {}: {}", node.getNodeId(), e.getMessage());
+            return Optional.empty();
+        }
+    }
+
     @PreDestroy
     public void shutdown() {
         channels.values().forEach(ManagedChannel::shutdown);
