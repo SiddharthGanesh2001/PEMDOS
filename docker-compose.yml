@@ -12,7 +12,9 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   node-1:
-    build: ./storage-node
+    build:
+      context: .
+      dockerfile: storage-node/Dockerfile
     environment:
       NODE_ID: node-1
       GRPC_PORT: 5001
@@ -23,7 +25,9 @@ services:
       - node1-data:/data/shards
 
   node-2:
-    build: ./storage-node
+    build:
+      context: .
+      dockerfile: storage-node/Dockerfile
     environment:
       NODE_ID: node-2
       GRPC_PORT: 5002
@@ -34,7 +38,9 @@ services:
       - node2-data:/data/shards
 
   node-3:
-    build: ./storage-node
+    build:
+      context: .
+      dockerfile: storage-node/Dockerfile
     environment:
       NODE_ID: node-3
       GRPC_PORT: 5003
@@ -45,7 +51,9 @@ services:
       - node3-data:/data/shards
 
   node-4:
-    build: ./storage-node
+    build:
+      context: .
+      dockerfile: storage-node/Dockerfile
     environment:
       NODE_ID: node-4
       GRPC_PORT: 5004
@@ -56,7 +64,9 @@ services:
       - node4-data:/data/shards
 
   node-5:
-    build: ./storage-node
+    build:
+      context: .
+      dockerfile: storage-node/Dockerfile
     environment:
       NODE_ID: node-5
       GRPC_PORT: 5005
@@ -67,7 +77,9 @@ services:
       - node5-data:/data/shards
 
   coordinator:
-    build: ./coordinator
+    build:
+      context: .
+      dockerfile: coordinator/Dockerfile
     environment:
       DB_HOST: postgres
       DB_PORT: 5432

@@ -1,6 +1,11 @@
+FROM eclipse-temurin:17-jdk AS build
+WORKDIR /project
+COPY . .
+RUN chmod +x gradlew && ./gradlew :storage-node:bootJar --no-daemon -x test
+
 FROM eclipse-temurin:17-jre
 WORKDIR /app
-COPY build/libs/*[^plain].jar app.jar
+COPY --from=build /project/storage-node/build/libs/*[^plain].jar app.jar
 RUN mkdir -p /data/shards
 EXPOSE 5001
 ENTRYPOINT ["java", "-jar", "app.jar"]
