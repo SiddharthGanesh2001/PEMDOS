@@ -11,7 +11,7 @@ A distributed object storage system implementing Reed-Solomon erasure coding wit
 | File | Purpose |
 |---|---|
 | `README.md` | This file - how to build, run, and verify the system |
-| `PEMDOS-Report.docx` | Comprehensive project report (introduction, design, implementation, screenshots, references) |
+| `PEMDOS-Report.pdf` | Comprehensive project report (introduction, design, implementation, screenshots, references) |
 | `demo-clean.sh` | **Recommended** automated test script - concise per-step output |
 | `demo.sh` | Verbose alternative test script (same coverage, more detail per step) |
 | `docker-compose.yml` | One-command orchestration of postgres + 5 nodes + coordinator |
