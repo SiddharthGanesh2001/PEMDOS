@@ -6,7 +6,7 @@ A distributed object storage system implementing Reed-Solomon erasure coding wit
 
 ---
 
-## Submission contents (CS 588 - Spring 2026)
+## Submission contents (CS 588)
 
 | File | Purpose |
 |---|---|
