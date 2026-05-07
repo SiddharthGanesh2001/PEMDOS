@@ -27,7 +27,7 @@ public class NodeController {
     @GetMapping
     @Operation(summary = "Get live status of all storage nodes")
     public ResponseEntity<List<NodeStatus>> getAllNodes() {
-        List<NodeStatus> statuses = nodeRepository.findAll().stream()
+        List<NodeStatus> statuses = nodeRepository.findAll().parallelStream()
                 .map(this::buildStatus)
                 .toList();
         return ResponseEntity.ok(statuses);

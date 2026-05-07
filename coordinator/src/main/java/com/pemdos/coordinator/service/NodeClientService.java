@@ -56,7 +56,9 @@ public class NodeClientService {
                     .setShardIndex(shardIndex)
                     .build();
 
-            GetShardResponse response = stubFor(node).getShard(request);
+            GetShardResponse response = stubFor(node)
+                    .withDeadlineAfter(500, TimeUnit.MILLISECONDS)
+                    .getShard(request);
             if (response.getFound()) {
                 return Optional.of(response.getData().toByteArray());
             }
@@ -74,7 +76,9 @@ public class NodeClientService {
                     .setShardIndex(shardIndex)
                     .build();
 
-            return stubFor(node).deleteShard(request).getSuccess();
+            return stubFor(node)
+                    .withDeadlineAfter(500, TimeUnit.MILLISECONDS)
+                    .deleteShard(request).getSuccess();
         } catch (Exception e) {
             log.warn("Failed to delete shard on node {}: {}", node.getNodeId(), e.getMessage());
             return false;
@@ -96,7 +100,7 @@ public class NodeClientService {
     public Optional<NodeStatusResponse> getNodeStatus(StorageNode node) {
         try {
             NodeStatusResponse response = stubFor(node)
-                    .withDeadlineAfter(3, TimeUnit.SECONDS)
+                    .withDeadlineAfter(500, TimeUnit.MILLISECONDS)
                     .getNodeStatus(NodeStatusRequest.newBuilder().build());
             return Optional.of(response);
         } catch (Exception e) {
