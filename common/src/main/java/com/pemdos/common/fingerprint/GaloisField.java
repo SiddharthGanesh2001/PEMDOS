@@ -3,7 +3,7 @@ package com.pemdos.common.fingerprint;
 public class GaloisField {
 
     // Primitive polynomial: x^8 + x^4 + x^3 + x^2 + 1 = 0x11d.
-    // This defines the "modulus" for field arithmetic — the same polynomial
+    // This defines the "modulus" for field arithmetic - the same polynomial
     // the Backblaze Reed-Solomon library uses.
     private static final int PRIMITIVE_POLY = 0x11d;
 
@@ -12,7 +12,7 @@ public class GaloisField {
     static final int[] EXP = new int[512];
 
     // LOG[x] = i  such that alpha^i = x.
-    // LOG[0] is undefined — we never look it up (handled by the 0-check in multiply).
+    // LOG[0] is undefined - we never look it up (handled by the 0-check in multiply).
     static final int[] LOG = new int[256];
 
     static {
@@ -35,7 +35,7 @@ public class GaloisField {
         }
     }
 
-    // Addition in GF(2^8) is bitwise XOR — there are no carries.
+    // Addition in GF(2^8) is bitwise XOR - there are no carries.
     public static int add(int a, int b) {
         return a ^ b;
     }

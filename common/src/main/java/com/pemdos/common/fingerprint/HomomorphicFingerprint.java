@@ -48,7 +48,7 @@ public class HomomorphicFingerprint {
     // This works because RS encoding is linear: fp(encode_j(D)) = encode_j(fp(D)).
     // The coordinator computes this from the data shard fingerprints at upload time
     // and stores it. At retrieval, it recomputes fp from the actual shard bytes and
-    // checks they match — without needing the other shards.
+    // checks they match - without needing the other shards.
     public int expectedFingerprint(int[] dataFingerprints, int shardIndex) {
         int result = 0;
         for (int i = 0; i < dataShards; i++) {

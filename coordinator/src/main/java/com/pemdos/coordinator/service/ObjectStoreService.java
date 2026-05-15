@@ -103,13 +103,13 @@ public class ObjectStoreService {
             Optional<byte[]> shardData = nodeClientService.getShard(node, storedObject.getObjectId(), meta.getShardIndex());
             if (shardData.isEmpty()) continue;
 
-            // Layer 1: SHA-256 integrity check — detects bit-level corruption
+            // Layer 1: SHA-256 integrity check - detects bit-level corruption
             if (!fingerprintService.verifyFingerprint(shardData.get(), meta.getSha256Hash())) {
                 log.warn("SHA-256 mismatch for shard {} of object {}", meta.getShardIndex(), objectKey);
                 continue;
             }
 
-            // Layer 2: Homomorphic consistency check — verifies the shard is consistent
+            // Layer 2: Homomorphic consistency check - verifies the shard is consistent
             // with the original Reed-Solomon encoding, not merely internally intact.
             int actualFp = HomomorphicFingerprint.evaluate(shardData.get(), storedObject.getHomomorphicEvalPoint());
             if (actualFp != meta.getHomomorphicFingerprint()) {
