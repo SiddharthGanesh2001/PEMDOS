@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" width="400" height="320">
+  <!-- PEMDOS Logo - Shield with Shards (Full version with text) -->
+  
+  <!-- Shield outline (subtle) -->
+  <path d="M200,20 L310,55 L310,140 Q310,220 200,270 Q90,220 90,140 L90,55 Z" 
+        fill="none" stroke="#888" stroke-width="2" opacity="0.2"/>
+  
+  <!-- Shard 1 (top) - Data -->
+  <path d="M200,28 L295,58 L295,90 L200,118 L105,90 L105,58 Z" fill="#85B7EB"/>
+  <path d="M200,28 L295,58 L295,90 L200,118 L105,90 L105,58 Z" fill="none" stroke="#185FA5" stroke-width="1.5"/>
+  
+  <!-- Shard 2 (middle left) - Data -->
+  <path d="M105,95 L200,123 L200,178 L105,150 Z" fill="#378ADD"/>
+  <path d="M105,95 L200,123 L200,178 L105,150 Z" fill="none" stroke="#0C447C" stroke-width="1.5"/>
+  
+  <!-- Shard 3 (middle right) - Data -->
+  <path d="M295,95 L200,123 L200,178 L295,150 Z" fill="#185FA5"/>
+  <path d="M295,95 L200,123 L200,178 L295,150 Z" fill="none" stroke="#042C53" stroke-width="1.5"/>
+  
+  <!-- Shard 4 (bottom left) - Parity -->
+  <path d="M105,155 L200,183 L200,235 Q150,218 105,180 Z" fill="none" stroke="#85B7EB" stroke-width="2.5" stroke-dasharray="6 4"/>
+  
+  <!-- Shard 5 (bottom right) - Parity -->
+  <path d="M295,155 L200,183 L200,235 Q250,218 295,180 Z" fill="none" stroke="#85B7EB" stroke-width="2.5" stroke-dasharray="6 4"/>
+  
+  <!-- Checkmark circle (integrity verified) -->
+  <circle cx="200" cy="145" r="26" fill="#E6F1FB" stroke="#378ADD" stroke-width="2"/>
+  <path d="M186,145 L195,154 L216,133" fill="none" stroke="#185FA5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- PEMDOS text -->
+  <text x="200" y="300" text-anchor="middle" fill="#1a1a1a" font-family="system-ui, -apple-system, sans-serif" font-size="36" font-weight="600" letter-spacing="4">PEMDOS</text>
+</svg>
