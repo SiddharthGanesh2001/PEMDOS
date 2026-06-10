@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./pemdos-logo-full.svg" alt="PEMDOS" width="280"/>
+</p>
+
 # PEMDOS
 
 **Persistent Erasure-coded Modular Distributed Object Store**
